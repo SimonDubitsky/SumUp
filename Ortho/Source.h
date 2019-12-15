@@ -19,6 +19,7 @@ public:
 class Source
 {
 public:
+	Source() { }
 	Source(Point3 origin, Point3 normal) :
 		origin_(origin), normal_(normal)
 	{ }
@@ -36,7 +37,16 @@ private:
 
 using Sources = std::vector<const Source*>;
 
+class FakeSource : public Source
+{
+public:
+	FakeSource() { }
+	void fillNode(Node& node) const override;
+};
+
 class OrthoPlaneSource : public Source
 {
+public:
+	OrthoPlaneSource() { }
 	void fillNode(Node& node) const override;
 };

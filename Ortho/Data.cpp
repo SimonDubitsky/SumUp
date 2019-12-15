@@ -3,7 +3,8 @@
 
 Data::Data(size_t argc, char* argv[])
 {
-
+	sources_.push_back(new FakeSource());
+	sources_.push_back(new OrthoPlaneSource());
 }
 
 Box2 Data::bounds() const

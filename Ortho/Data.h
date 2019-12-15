@@ -10,6 +10,7 @@ public:
 
 	using Sources = std::vector<Source*>;
 
+	// размер главной плоскости и количество разбиений по осям X и Y
 	Box2 bounds() const;
 	size_t divx() const;
 	size_t divy() const;
