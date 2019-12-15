@@ -7,13 +7,13 @@
 #include <string>
 #include "Data.h"
 
-class Solver
+class Summator
 {
 public:
-	using Row = std::vector<complex_vector>;	// grid points along x - axis
+	using Row = std::vector<Node>;	// grid points along x - axis
 	using Rows = std::vector<Row>;
 
-	Solver(Box2 box, size_t nx, size_t ny);
+	Summator(Box2 box, size_t nx, size_t ny);
 	void run(const Data::Sources& souces);
 	void save(const std::string& filname);
 

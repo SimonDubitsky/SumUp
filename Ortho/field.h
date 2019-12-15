@@ -57,4 +57,14 @@ public:
 	}
 };
 
-using complex_vector = std::complex<Vector2>;
+class complex_vector : public std::complex<Vector2>
+{
+public:
+	complex_vector()
+	{
+		real().set<0>(0);
+		real().set<1>(0);
+		imag().set<0>(0);
+		imag().set<1>(0);
+	}
+};

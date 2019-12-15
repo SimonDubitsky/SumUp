@@ -2,7 +2,7 @@
 #include "iostream"
 #include "Data.h"
 #include "Source.h"
-#include "Solver.h"
+#include "Summator.h"
 #include "geom.h"
 #include "field.h"
 
@@ -13,7 +13,7 @@ int main(size_t argc, char* argv[])
 		std::cout << argv[i] << " ";
 
 	Data data(argc, argv);
-	Solver solver(data.bounds(), data.divx(), data.divy());
+	Summator solver(data.bounds(), data.divx(), data.divy());
 	solver.run(data.sources());
 	solver.save("grid.txt");
 
