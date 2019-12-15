@@ -5,6 +5,8 @@
 
 using field_t = std::complex<double>;
 
+constexpr double PI = 3.1415926;
+
 struct Vector2 : public Point2
 {
 public:
@@ -66,5 +68,12 @@ public:
 		real().set<1>(0);
 		imag().set<0>(0);
 		imag().set<1>(0);
+	}
+	complex_vector(double reX, double reY, double imX, double imY)
+	{
+		real().set<0>(reX);
+		real().set<1>(reY);
+		imag().set<0>(imX);
+		imag().set<1>(imY);
 	}
 };

@@ -27,6 +27,8 @@ public:
 	virtual Point3 getNormal() const;
 	virtual void fillNode(Node& node) const = 0;
 
+	Point2 localCoord(const Point2& p) const;
+
 private:
 	Point3 origin_;	// положение начала координат источника в глобальной системе
 	Point3 normal_;	// ориентация нормали к плоскости источника в глобальной системе

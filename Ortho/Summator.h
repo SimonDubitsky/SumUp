@@ -15,7 +15,7 @@ public:
 
 	Summator(Box2 box, size_t nx, size_t ny);
 	void run(const Data::Sources& souces);
-	void save(const std::string& filname);
+	void save(const std::string& filename);
 
 private:
 	Box2 box_;	// size of the output plane

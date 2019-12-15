@@ -13,9 +13,9 @@ int main(size_t argc, char* argv[])
 		std::cout << argv[i] << " ";
 
 	Data data(argc, argv);
-	Summator solver(data.bounds(), data.divx(), data.divy());
-	solver.run(data.sources());
-	solver.save("grid.txt");
+	Summator summator(data.bounds(), data.divx(), data.divy());
+	summator.run(data.sources());
+	summator.save("grid.txt");
 
 	std::cout << "\n\n Press any key to exit";
 	char c;

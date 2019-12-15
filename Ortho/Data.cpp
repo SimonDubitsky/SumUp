@@ -13,12 +13,12 @@ Box2 Data::bounds() const
 
 size_t Data::divx() const
 {
-	return 200;
+	return 10;
 }
 
 size_t Data::divy() const
 {
-	return 200;
+	return 20;
 }
 
 const Data::Sources& Data::sources() const

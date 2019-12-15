@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Summator.h"
+#include <fstream>
 
 Node::Node(double x_, double y_) : 
 	Point2(x_, y_),
@@ -27,7 +28,7 @@ Summator::Summator(Box2 box, size_t nx, size_t ny) :
 	{
 		double x = 0;
 		rows_.push_back(Row());
-		auto row = rows_.back();
+		auto& row = rows_.back();
 		for (size_t icol = 0; icol <= nx; icol++)
 		{
 			row.push_back(Node(x, y));
@@ -41,9 +42,9 @@ void Summator::run(const Data::Sources& sources)
 {
 	for (const auto* source : sources)
 	{
-		for (auto row : rows_)
+		for (auto& row : rows_)
 		{	
-			for (auto node : row)
+			for (auto& node : row)
 			{
 				source->fillNode(node);
 			}
@@ -51,7 +52,21 @@ void Summator::run(const Data::Sources& sources)
 	}
 }
 
-void Summator::save(const std::string& filname)
+void Summator::save(const std::string& filename)
 {
+	std::ofstream stream(filename, std::ios::out);
+	const std::string dlm("; ");
 
+	for (auto row : rows_)
+	{
+		for (auto node : row)
+		{
+			stream /*<< std::setw(20)*/
+				<< node.get<0>() << dlm << node.get<1>() << dlm
+				<< node.u.real() << dlm << node.u.imag() << dlm
+				<< node.grad.real().get<0>() << dlm << node.grad.real().get<1>() << dlm
+				<< node.grad.imag().get<0>() << dlm << node.grad.imag().get<1>() << dlm
+				<< std::endl;
+		}
+	}
 }
