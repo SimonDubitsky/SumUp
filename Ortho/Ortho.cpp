@@ -1,10 +1,12 @@
 #include "stdafx.h"
-#include "iostream"
 #include "Data.h"
 #include "Source.h"
 #include "Summator.h"
 #include "geom.h"
 #include "field.h"
+
+#include <iostream>
+#include <conio.h>
 
 int main(size_t argc, char* argv[])
 {
@@ -17,9 +19,9 @@ int main(size_t argc, char* argv[])
 	summator.run(data.sources());
 	summator.save("grid.txt");
 
-	std::cout << "\n\n Press any key to exit";
-	char c;
-	std::cin >> c;
+	std::cout << "\n\n Press any key to exit. ";
+	_kbhit();
+	char c = std::cin.get();
 }
 
 
