@@ -14,6 +14,7 @@ public:
 	Box2 bounds() const;
 	size_t divx() const;
 	size_t divy() const;
+	double zLevel() const;
 	const Sources& sources() const;
 
 private:

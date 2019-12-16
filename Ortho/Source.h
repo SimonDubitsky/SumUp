@@ -2,6 +2,7 @@
 #include "geom.h"
 #include "field.h"
 #include <vector>
+#include <string>
 
 // represents a node in the global plane (the target of summation)
 // coordinates here are in the global coordinate system
@@ -24,15 +25,19 @@ public:
 		origin_(origin), normal_(normal)
 	{ }
 
-	virtual Point3 getOrigin() const;
-	virtual Point3 getNormal() const;
-	virtual void fillNode(Node& node) const = 0;
+	virtual Point3 getOrigin() const;	// location of local CS in the global
+	virtual Point3 getNormal() const;	// location to the plane of local CS in the global
+	virtual Point2 localCoord(const Point2& p) const;	// global -> local conversion
+	virtual void fillNode(Node& node) const = 0; // calculate field in the given point
 
-	Point2 localCoord(const Point2& p) const;
+	virtual double zLevel() const { return zLevel_; }
+	virtual void zLevel(double z) { zLevel_ = z; }
+	virtual void prepare();
 
 private:
 	Point3 origin_;	// положение начала координат источника в глобальной системе
 	Point3 normal_;	// ориентация нормали к плоскости источника в глобальной системе
+	double zLevel_; // высота над землей
 };
 
 using Sources = std::vector<const Source*>;
@@ -47,6 +52,16 @@ public:
 class OrthoPlaneSource : public Source
 {
 public:
-	OrthoPlaneSource() { }
+	OrthoPlaneSource(const std::string& problemName, 
+		const Point3& origin, const Point3& normal,
+		double minX, double maxX, double minY, double maxY);
+	Point2 localCoord(const Point2& p) const override;
+	void prepare() override;
 	void fillNode(Node& node) const override;
+
+	bool insideBox(const Point2& p) const;
+
+private:
+	const std::string& problemName_;
+	const Box2 box_;	// в осях X-Z локальной системы координат
 };

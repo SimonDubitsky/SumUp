@@ -145,6 +145,7 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="geom.h" />
+    <ClInclude Include="QF.h" />
     <ClInclude Include="Summator.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="stdafx.h" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="Ortho.cpp" />
+    <ClCompile Include="QF.cpp" />
     <ClCompile Include="Summator.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="stdafx.cpp">

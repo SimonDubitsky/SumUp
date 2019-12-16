@@ -42,6 +42,7 @@ void Summator::run(const Data::Sources& sources)
 {
 	for (const auto* source : sources)
 	{
+		source->prepare();
 		for (auto& row : rows_)
 		{	
 			for (auto& node : row)
