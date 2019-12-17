@@ -63,17 +63,10 @@ class complex_vector : public std::complex<Vector2>
 {
 public:
 	complex_vector()
-	{
-		real().set<0>(0);
-		real().set<1>(0);
-		imag().set<0>(0);
-		imag().set<1>(0);
-	}
-	complex_vector(double reX, double reY, double imX, double imY)
-	{
-		real().set<0>(reX);
-		real().set<1>(reY);
-		imag().set<0>(imX);
-		imag().set<1>(imY);
+	{ 	}
+
+	complex_vector(double reX, double reY, double imX, double imY) :
+		complex<Vector2>(Vector2(reX, reY), Vector2(imX, imY))
+	{ 
 	}
 };

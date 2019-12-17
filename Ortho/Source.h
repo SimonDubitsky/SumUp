@@ -27,12 +27,12 @@ public:
 
 	virtual Point3 getOrigin() const;	// location of local CS in the global
 	virtual Point3 getNormal() const;	// location to the plane of local CS in the global
-	virtual Point2 localCoord(const Point2& p) const;	// global -> local conversion
+	virtual Point3 localCoord(const Point2& p) const;	// global -> local conversion
 	virtual void fillNode(Node& node) const = 0; // calculate field in the given point
 
 	virtual double zLevel() const { return zLevel_; }
 	virtual void zLevel(double z) { zLevel_ = z; }
-	virtual void prepare();
+	virtual void prepare() const;
 
 private:
 	Point3 origin_;	// положение начала координат источника в глобальной системе
@@ -55,13 +55,13 @@ public:
 	OrthoPlaneSource(const std::string& problemName, 
 		const Point3& origin, const Point3& normal,
 		double minX, double maxX, double minY, double maxY);
-	Point2 localCoord(const Point2& p) const override;
-	void prepare() override;
+	Point3 localCoord(const Point2& p) const override;
+	void prepare() const override;
 	void fillNode(Node& node) const override;
 
 	bool insideBox(const Point2& p) const;
 
 private:
-	const std::string& problemName_;
+	const std::string problemName_;
 	const Box2 box_;	// в осях X-Z локальной системы координат
 };

@@ -23,5 +23,6 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="QF.cpp" />
+    <ClCompile Include="geom.cpp" />
   </ItemGroup>
 </Project>
