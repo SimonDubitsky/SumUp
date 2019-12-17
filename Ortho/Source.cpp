@@ -81,9 +81,10 @@ void OrthoPlaneSource::prepare() const
 
 }
 
-// navigate to: F:\R&D\Дмитрий Влад. Кузнецов\2019-July-01_ИмпульсПроект\ВЛ-750\Problems
-const std::string problemPath { 
-	"F:\\R&D\\Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems" };
+//const std::string RandD{ F:\\R&D\\ };		// devDell
+const std::string RandD{ "E:\\R&D\\" };		// Dev10
+const std::string problemPath = RandD +  
+	"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
 complex_vector toComplexVector(ComplexVectorPtr& cv)
 {
 	double reX = cv->Re->X;
@@ -105,8 +106,11 @@ void OrthoPlaneSource::fillNode(Node& node) const
 		QF()->DefaultFilePath = _bstr_t(problemPath.c_str());
 		assert(!problemName_.empty());
 		IProblemPtr pbm = QF()->Problems->Open(problemName_.c_str());
-		assert(pbm->Solved);
+
+		if (!pbm->Solved)
+			pbm->SolveProblem(FALSE);
 		pbm->AnalyzeResults();
+
 		IResultPtr res = pbm->Result;
 
 		field_t u(0, 0);

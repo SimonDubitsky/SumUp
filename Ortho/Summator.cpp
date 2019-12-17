@@ -62,11 +62,23 @@ void Summator::save(const std::string& filename)
 	{
 		for (auto node : row)
 		{
-			stream /*<< std::setw(20)*/
-				<< node.get<0>() << dlm << node.get<1>() << dlm
-				<< node.u.real() << dlm << node.u.imag() << dlm
-				<< node.grad.real().get<0>() << dlm << node.grad.real().get<1>() << dlm
-				<< node.grad.imag().get<0>() << dlm << node.grad.imag().get<1>() << dlm
+			//stream /*<< std::setw(20)*/
+			//	<< node.get<0>() << dlm << node.get<1>() << dlm
+			//	<< node.u.real() << dlm << node.u.imag() << dlm
+			//	<< node.grad.real().get<0>() << dlm << node.grad.real().get<1>() << dlm
+			//	<< node.grad.imag().get<0>() << dlm << node.grad.imag().get<1>() << dlm
+			//	<< std::endl;
+
+			double uRMS = abs(node.u);
+			double reX = node.grad.real().x();
+			double reY = node.grad.real().y();
+			double imX = node.grad.imag().x();
+			double imY = node.grad.imag().y();
+
+			double gradRMS = sqrt(reX * reX + reY * reY + imX * imX + imY *imY) / sqrt(2);
+
+			stream << node.get<0>() << dlm << node.get<1>() << dlm
+				<< uRMS << dlm << gradRMS << dlm
 				<< std::endl;
 		}
 	}

@@ -1,6 +1,6 @@
 #pragma once
 
-#import "d:\Fast\QuickField\origin_Dione\Common\TypelibEnglish\Debug\ActiveField.tlb" no_function_mapping 
+#import <ActiveField.tlb> no_function_mapping 
 // Remark: no_function_mapping is an undocumented directive that is neccessary
 //   to prevent strange linker error (LNK2019 - unresolved reference). 
 //   Apparently it happens if there are more then 1000 methods imported by #import directive
