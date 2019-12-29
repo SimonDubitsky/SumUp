@@ -57,6 +57,9 @@ void Summator::save(const std::string& filename)
 {
 	std::ofstream stream(filename, std::ios::out);
 	const std::string dlm("; ");
+	
+	// table caption
+	stream << "x" << dlm << "y" << dlm << "potential" << dlm << "grad" << dlm << std::endl;
 
 	for (auto row : rows_)
 	{

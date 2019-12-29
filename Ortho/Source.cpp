@@ -82,7 +82,8 @@ void OrthoPlaneSource::prepare() const
 }
 
 //const std::string RandD{ F:\\R&D\\ };		// devDell
-const std::string RandD{ "E:\\R&D\\" };		// Dev10
+//const std::string RandD{ "E:\\R&D\\" };		// Dev10
+const std::string RandD{ "D:\\R&D\\" };		// simon-think
 const std::string problemPath = RandD +  
 	"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
 complex_vector toComplexVector(ComplexVectorPtr& cv)
