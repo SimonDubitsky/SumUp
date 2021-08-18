@@ -47,6 +47,13 @@ OrthoPlaneSource::OrthoPlaneSource(const std::string& problemName,
 	box_(minX, maxX, minY, maxY)
 { }
 
+OrthoPlaneSource::OrthoPlaneSource(const std::string& problemName,
+	const Point3& origin, const Point3& normal, const Box2& limits) :
+	Source(origin, normal),
+	problemName_(problemName),
+	box_(limits)
+{ }
+
 Point3 OrthoPlaneSource::localCoord(const Point2& p) const
 {
 	Point3 lp(0 , 0, 0);
@@ -81,9 +88,9 @@ void OrthoPlaneSource::prepare() const
 
 }
 
-//const std::string RandD{ F:\\R&D\\ };		// devDell
+const std::string RandD{ "E:\\R&D\\" };			// devDell
 //const std::string RandD{ "E:\\R&D\\" };		// Dev10
-const std::string RandD{ "D:\\R&D\\" };		// simon-think
+//const std::string RandD{ "D:\\R&D\\" };		// simon-think
 const std::string problemPath = RandD +  
 	"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
 complex_vector toComplexVector(ComplexVectorPtr& cv)

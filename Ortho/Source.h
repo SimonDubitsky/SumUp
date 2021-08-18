@@ -55,9 +55,15 @@ public:
 	OrthoPlaneSource(const std::string& problemName, 
 		const Point3& origin, const Point3& normal,
 		double minX, double maxX, double minY, double maxY);
+	OrthoPlaneSource(const std::string& problemName,
+		const Point3& origin, const Point3& normal, const Box2& limits);
+
 	Point3 localCoord(const Point2& p) const override;
 	void prepare() const override;
 	void fillNode(Node& node) const override;
+
+	std::string problemName() const { return problemName_; }
+	const Box2& box() const { return box_; }
 
 	bool insideBox(const Point2& p) const;
 
