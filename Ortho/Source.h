@@ -56,7 +56,7 @@ public:
 		const Point3& origin, const Point3& normal,
 		double minX, double maxX, double minY, double maxY);
 	OrthoPlaneSource(const std::string& problemName,
-		const Point3& origin, const Point3& normal, const Box2& limits);
+		const Point3& origin, const Point3& normal, const Box2& box);
 
 	Point3 localCoord(const Point2& p) const override;
 	void prepare() const override;
@@ -65,7 +65,7 @@ public:
 	std::string problemName() const { return problemName_; }
 	const Box2& box() const { return box_; }
 
-	bool insideBox(const Point2& p) const;
+	bool isInsideBox(const Point2& p) const;
 
 private:
 	const std::string problemName_;

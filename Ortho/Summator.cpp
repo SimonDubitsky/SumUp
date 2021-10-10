@@ -18,15 +18,20 @@ Summator::Summator(Box2 box, size_t nx, size_t ny) :
 {
 	assert(nx > 0 && ny > 0);
 
-	double width = box_.max_corner().get<0>() - box_.min_corner().get<0>();
-	double height = box_.max_corner().get<1>() - box_.min_corner().get<1>();
+	double xmin = box_.min_corner().get<0>();
+	double xmax = box_.max_corner().get<0>();
+	double ymin = box_.min_corner().get<1>();
+	double ymax = box_.max_corner().get<1>();
+
+	double width = xmax - xmin;
+	double height = ymax - ymin;
 	assert(height > 0 && width > 0);
 
 	d_ = Point2(width / nx, height / ny);
-	double y = 0;
+	double y = ymin;
 	for (size_t irow = 0; irow <= ny; irow++)
 	{
-		double x = 0;
+		double x = xmin;
 		rows_.push_back(Row());
 		auto& row = rows_.back();
 		for (size_t icol = 0; icol <= nx; icol++)

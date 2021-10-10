@@ -11,8 +11,9 @@ public:
 	using Sources = std::vector<Source*>;
 
 	// размер главной плоскости 
-	Box2 bounds() const;
-	Box2 setBounds(const Box2& box);
+	const Box2& bounds() const;
+	Box2& bounds();
+	void setBounds(const Box2& box);
 	
 	// количество разбиений по осям X и Y
 	unsigned divx() const { return divx_;  }

@@ -48,10 +48,10 @@ OrthoPlaneSource::OrthoPlaneSource(const std::string& problemName,
 { }
 
 OrthoPlaneSource::OrthoPlaneSource(const std::string& problemName,
-	const Point3& origin, const Point3& normal, const Box2& limits) :
+	const Point3& origin, const Point3& normal, const Box2& box) :
 	Source(origin, normal),
 	problemName_(problemName),
-	box_(limits)
+	box_(box)
 { }
 
 Point3 OrthoPlaneSource::localCoord(const Point2& p) const
@@ -77,7 +77,7 @@ Point3 OrthoPlaneSource::localCoord(const Point2& p) const
 	return lp;
 }
 
-bool OrthoPlaneSource::insideBox(const Point2& p) const
+bool OrthoPlaneSource::isInsideBox(const Point2& p) const
 {
 	return box_.min_corner().get<0>() <= p.get<0>() && p.get<0>() <= box_.max_corner().get<0>()
 		&& box_.min_corner().get<1>() <= p.get<1>() && p.get<1>() <= box_.max_corner().get<1>();
@@ -91,9 +91,11 @@ void OrthoPlaneSource::prepare() const
 const std::string RandD{ "E:\\R&D\\" };			// devDell
 //const std::string RandD{ "E:\\R&D\\" };		// Dev10
 //const std::string RandD{ "D:\\R&D\\" };		// simon-think
-const std::string problemPath = RandD +  
-	"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
-complex_vector toComplexVector(ComplexVectorPtr& cv)
+const std::string problemPath = RandD +
+	"Дмитрий Влад. Кузнецов\\2021-July_ИмпульсПроект\\_PART-2 (ПС-110 здание)\\Problems";
+	//"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
+
+	complex_vector toComplexVector(ComplexVectorPtr& cv)
 {
 	double reX = cv->Re->X;
 	double reY = cv->Re->Y;
@@ -109,7 +111,7 @@ void OrthoPlaneSource::fillNode(Node& node) const
 	double y = lp.get<1>();
 	double z = lp.get<2>();
 
-	if (insideBox(Point2(x, z)))
+	if (isInsideBox(Point2(x, z)))
 	{
 		QF()->DefaultFilePath = _bstr_t(problemPath.c_str());
 		assert(!problemName_.empty());

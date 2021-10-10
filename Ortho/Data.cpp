@@ -130,7 +130,7 @@ namespace
 }
 
 Data::Data(size_t argc, char* argv[]) :
-	box_(0, 375, 0, 290)
+	box_(0, 0, 0, 0)
 {
 	if (argc > 1)
 	{
@@ -205,14 +205,19 @@ Data::Data(size_t argc, char* argv[]) :
 
 	for (auto s : sources_)
 		s->zLevel(zLevel());
-}
+	}
 
-Box2 Data::bounds() const
+const Box2& Data::bounds() const
 {
 	return box_;
 }
 
-Box2 Data::setBounds(const Box2& box)
+Box2& Data::bounds()
+{
+	return box_;
+}
+
+void Data::setBounds(const Box2& box)
 {
 	box_ = box;
 }
