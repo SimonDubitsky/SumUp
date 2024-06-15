@@ -1,0 +1,32 @@
+{
+  "sources": [
+    {
+      "limits": {
+        "maxX": 100.0,
+        "maxY": 15.0,
+        "minX": -100.0,
+        "minY": 0.0
+      },
+      "normal": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "origin": {
+        "x": 25.8,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "problem": "1_HE_100kA.pbm"
+    }
+  ],
+  "zone": {
+    "divX": 80,
+    "divY": 40,
+    "maxX": 33.5,
+    "maxY": 15.0,
+    "minX": 0.0,
+    "minY": 0.0,
+    "zLevel": 5.2
+  }
+}
