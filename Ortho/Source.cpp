@@ -95,7 +95,7 @@ const std::string problemPath = RandD +
 	"Дмитрий Влад. Кузнецов\\2021-July_ИмпульсПроект\\_PART-2 (ПС-110 здание)\\Problems";
 	//"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
 
-	complex_vector toComplexVector(ComplexVectorPtr& cv)
+	complex_vector toComplexVector(const ComplexVectorPtr& cv)
 {
 	double reX = cv->Re->X;
 	double reY = cv->Re->Y;
