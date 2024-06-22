@@ -3,6 +3,7 @@
 
 #include <nlohmann\json.hpp>	// JSON parser/serializer
 #include <fstream>
+#include <numbers>
 
 using namespace nlohmann;
 
@@ -142,35 +143,53 @@ Data::Data(size_t argc, char* argv[]) :
 	}
 	else
 	{
-		// Electric field
-		sources_.push_back(new OrthoPlaneSource("1_ES.pbm", Point3(60.3, 228, 0), Point3(0, -1, 0),
-			-100, 100, -50, 188.5));
-		sources_.push_back(new OrthoPlaneSource("2_ES.pbm", Point3(128.5, 228, 0), Point3(0, -1, 0),
-			-100, 100, -50, 55));
-		sources_.push_back(new OrthoPlaneSource("3_ES.pbm", Point3(254.350, 228, 0), Point3(0, -1, 0),
-			-100, 100, -50, 188.5));
-		sources_.push_back(new OrthoPlaneSource("4_ES.pbm", Point3(43, 180, 0), Point3(1, 0, 0),
-			-100, 100, -43, 223));
-		sources_.push_back(new OrthoPlaneSource("5_ES.pbm", Point3(43, 132.5, 0), Point3(1, 0, 0),
-			-100, 100, 0, 95.5));
-		sources_.push_back(new OrthoPlaneSource("6_ES.pbm", Point3(606, 132.5, 0), Point3(1, 0, 0),
-			-100, 100, -211, 60));
-		sources_.push_back(new OrthoPlaneSource("7_ES.pbm", Point3(606, 50, 0), Point3(1, 0, 0),
-			-100, 100, -124, 60));
-		sources_.push_back(new OrthoPlaneSource("8_ES.pbm", Point3(43, 180, 0), Point3(1, 0, 0),
-			-100, 100, 0, 230));
-		sources_.push_back(new OrthoPlaneSource("9_ES.pbm", Point3(43, 132.5, 0), Point3(1, 0, 0),
-			-100, 100, -37, 0));
-		sources_.push_back(new OrthoPlaneSource("10_ES.pbm", Point3(138, 132.5, 0), Point3(1, 0, 0),
-			-100, 100, -25, 128));
-		sources_.push_back(new OrthoPlaneSource("11_ES.pbm", Point3(122, 101, 0), Point3(1, 0, 0),
-			-100, 100, -30, 0));
-		sources_.push_back(new OrthoPlaneSource("12_ES.pbm", Point3(253, 92, 0), Point3(1, 0, 0),
-			-100, 100, -30, 0));
-		sources_.push_back(new OrthoPlaneSource("13_ES.pbm", Point3(97.2, 100, 0), Point3(1, 0, 0),
-			-100, 100, 0, 141.5));
+		// габариты расчетной области
+		setBounds(Box2(-10, 30, -20, 20));
+		setZLevel(1.8);
+		setDivx(40);
+		setDivy(40);
 
-		saveOrthoPlane(*this, "ES_sources.json");
+		// Отрезки прямых проводов
+		// Electric field
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(2100, 0),
+			1, 1, 1.8,
+			1, 15, 1.8, "wireA"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(2100, 2 * std::numbers::pi / 3),
+			7, 1, 1.8,
+			7, 15, 1.8, "wireB"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(2100, 4 * std::numbers::pi / 3),
+			13, 1, 1.8,
+			13, 15, 1.8, "wireC"));
+
+		// Electric field
+		//sources_.push_back(new OrthoPlaneSource("1_ES.pbm", Point3(60.3, 228, 0), Point3(0, -1, 0),
+		//	-100, 100, -50, 188.5));
+		//sources_.push_back(new OrthoPlaneSource("2_ES.pbm", Point3(128.5, 228, 0), Point3(0, -1, 0),
+		//	-100, 100, -50, 55));
+		//sources_.push_back(new OrthoPlaneSource("3_ES.pbm", Point3(254.350, 228, 0), Point3(0, -1, 0),
+		//	-100, 100, -50, 188.5));
+		//sources_.push_back(new OrthoPlaneSource("4_ES.pbm", Point3(43, 180, 0), Point3(1, 0, 0),
+		//	-100, 100, -43, 223));
+		//sources_.push_back(new OrthoPlaneSource("5_ES.pbm", Point3(43, 132.5, 0), Point3(1, 0, 0),
+		//	-100, 100, 0, 95.5));
+		//sources_.push_back(new OrthoPlaneSource("6_ES.pbm", Point3(606, 132.5, 0), Point3(1, 0, 0),
+		//	-100, 100, -211, 60));
+		//sources_.push_back(new OrthoPlaneSource("7_ES.pbm", Point3(606, 50, 0), Point3(1, 0, 0),
+		//	-100, 100, -124, 60));
+		//sources_.push_back(new OrthoPlaneSource("8_ES.pbm", Point3(43, 180, 0), Point3(1, 0, 0),
+		//	-100, 100, 0, 230));
+		//sources_.push_back(new OrthoPlaneSource("9_ES.pbm", Point3(43, 132.5, 0), Point3(1, 0, 0),
+		//	-100, 100, -37, 0));
+		//sources_.push_back(new OrthoPlaneSource("10_ES.pbm", Point3(138, 132.5, 0), Point3(1, 0, 0),
+		//	-100, 100, -25, 128));
+		//sources_.push_back(new OrthoPlaneSource("11_ES.pbm", Point3(122, 101, 0), Point3(1, 0, 0),
+		//	-100, 100, -30, 0));
+		//sources_.push_back(new OrthoPlaneSource("12_ES.pbm", Point3(253, 92, 0), Point3(1, 0, 0),
+		//	-100, 100, -30, 0));
+		//sources_.push_back(new OrthoPlaneSource("13_ES.pbm", Point3(97.2, 100, 0), Point3(1, 0, 0),
+		//	-100, 100, 0, 141.5));
+
+		//saveOrthoPlane(*this, "ES_sources.json");
 
 		// Magnetic field
 		//sources_.push_back(new OrthoPlaneSource("1_HE.pbm", Point3(60.3, 228, 0), Point3(0, -1, 0),

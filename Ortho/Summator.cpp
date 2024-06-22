@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Summator.h"
 #include <fstream>
+#include <iostream>
+#include <chrono>
 
 Node::Node(double x_, double y_) : 
 	Point2(x_, y_),
@@ -45,9 +47,14 @@ Summator::Summator(Box2 box, size_t nx, size_t ny) :
 
 void Summator::run(const Data::Sources& sources)
 {
-	for (const auto* source : sources)
+	using namespace std::literals; // enables literal suffixes, e.g. 24h, 1ms, 1s.
+
+	for (auto* source : sources)
 	{
+		auto start = std::chrono::steady_clock::now();
+		std::cout << std::endl << "  name: " << source->name();
 		source->prepare();
+
 		for (auto& row : rows_)
 		{	
 			for (auto& node : row)
@@ -55,6 +62,9 @@ void Summator::run(const Data::Sources& sources)
 				source->fillNode(node);
 			}
 		}
+		auto end = std::chrono::steady_clock::now();
+		source->release();
+		std::cout << " duration: " << (end - start) / 1s << " s.";
 	}
 }
 
