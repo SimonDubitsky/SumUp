@@ -1,4 +1,5 @@
 #pragma once
+#define _SILENCE_NONFLOATING_COMPLEX_DEPRECATION_WARNING	// supress 'std::complex<Vector2>::complex': warning STL4037
 
 #include "geom.h"
 #include <ccomplex>

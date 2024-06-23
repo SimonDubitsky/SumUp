@@ -6,14 +6,15 @@
 
 Node::Node(double x_, double y_) : 
 	Point2(x_, y_),
-	u(0)
+	u(0),
+	Bre(0, 0, 0), Bim(0, 0, 0)
 { }
 
 Node::Node(const Point2& point) :
 	Point2(point),
-	u(0)
+	u(0),
+	Bre(0, 0, 0), Bim(0, 0, 0)
 { }
-
 
 Summator::Summator(Box2 box, size_t nx, size_t ny) :
 	box_(box)
@@ -74,8 +75,9 @@ void Summator::save(const std::string& filename)
 	const std::string dlm("; ");
 	
 	// table caption
-	stream << "x" << dlm << "y" << dlm << "potential" << dlm << "grad" << dlm << std::endl;
+	stream << "x" << dlm << "y" << dlm << "potential" << dlm << "grad" << dlm << "B3d" << std::endl;
 
+	int counter = 0;
 	for (auto row : rows_)
 	{
 		for (auto node : row)
@@ -94,10 +96,18 @@ void Summator::save(const std::string& filename)
 			double imY = node.grad.imag().y();
 
 			double gradRMS = sqrt(reX * reX + reY * reY + imX * imX + imY *imY) / sqrt(2);
+			double BreX = node.Bre.get<0>(), BreY = node.Bre.get<1>(), BreZ = node.Bre.get<2>();
+			double BimX = node.Bim.get<0>(), BimY = node.Bim.get<1>(), BimZ = node.Bim.get<2>();
+			double Brms = sqrt(BreX * BreX + BreY * BreY + BreZ * BreZ +
+				BimX * BimX + BimY * BimY + BimZ * BimZ);
 
 			stream << node.get<0>() << dlm << node.get<1>() << dlm
 				<< uRMS << dlm << gradRMS << dlm
+				<< Brms << dlm
 				<< std::endl;
+			counter++;
 		}
 	}
+
+	std::cout << std::endl << " " << counter << " nodes saved to '" << filename << "' file.";
 }

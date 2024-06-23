@@ -17,9 +17,9 @@ BOOL prepare_qf(WindowPtr& ptrWin)
 	//const std::string RandD{ "E:\\R&D\\" };		// Dev10
 	const std::string RandD{ "D:\\R&D\\" };			// SimonW540
 	const std::string problemPath = RandD +
-		//"Äìèòðèé Âëàä. Êóçíåöîâ\\2021-July_ÈìïóëüñÏðîåêò\\_PART-2 (ÏÑ-110 çäàíèå)\\Problems";
-		//"Äìèòðèé Âëàä. Êóçíåöîâ\\2019-July-01_ÈìïóëüñÏðîåêò\\ÂË-750\\Problems";
-		//"Äìèòðèé Âëàä.Êóçíåöîâ\\2024-àïðåëü\\Problems";
+		//"Ð”Ð¼Ð¸Ñ‚Ñ€Ð¸Ð¹ Ð’Ð»Ð°Ð´. ÐšÑƒÐ·Ð½ÐµÑ†Ð¾Ð²\\2021-July_Ð˜Ð¼Ð¿ÑƒÐ»ÑŒÑÐŸÑ€Ð¾ÐµÐºÑ‚\\_PART-2 (ÐŸÐ¡-110 Ð·Ð´Ð°Ð½Ð¸Ðµ)\\Problems";
+		//"Ð”Ð¼Ð¸Ñ‚Ñ€Ð¸Ð¹ Ð’Ð»Ð°Ð´. ÐšÑƒÐ·Ð½ÐµÑ†Ð¾Ð²\\2019-July-01_Ð˜Ð¼Ð¿ÑƒÐ»ÑŒÑÐŸÑ€Ð¾ÐµÐºÑ‚\\Ð’Ð›-750\\Problems";
+		//"Ð”Ð¼Ð¸Ñ‚Ñ€Ð¸Ð¹ Ð’Ð»Ð°Ð´.ÐšÑƒÐ·Ð½ÐµÑ†Ð¾Ð²\\2024-Ð°Ð¿Ñ€ÐµÐ»ÑŒ\\Problems";
 		"ImpulsProject\\2024-April\\Problems";
 
 	QF()->DefaultFilePath = _bstr_t(problemPath.c_str());

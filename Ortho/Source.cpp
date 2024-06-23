@@ -41,6 +41,11 @@ void FakeSource::fillNode(Node& node) const
 	node.u = field_t(x * y, x / y * PI / 5);
 	complex_vector grad{ y, x, PI / (5 * y), - PI*x / (y*y)};
 	node.grad = grad;
+	Point3 Bre{ PI / (5 * y), -PI * x / (y * y), PI * (x + y) };
+	Point3 Bim{ PI / (-5 * y), PI * x / (y * y), PI * (x - y) };
+	add_point(node.Bre, Bre);
+	add_point(node.Bim, Bim);
+
 }
 //////////////////////////////////////////////////////////////////////////
 
@@ -64,15 +69,15 @@ Point3 OrthoPlaneSource::globalCoord(const Point2& p) const
 {
 	Point3 lp(0 , 0, 0);
 
-	// сдвиг
+	// СЃРґРІРёРі
 	lp.set<0>(p.get<0>() - getOrigin().get<0>());
 	lp.set<1>(p.get<1>() - getOrigin().get<1>());
-	lp.set<2>(zLevel()); //	высоты считаем совпадающими (dz=0)
+	lp.set<2>(zLevel()); //	РІС‹СЃРѕС‚С‹ СЃС‡РёС‚Р°РµРј СЃРѕРІРїР°РґР°СЋС‰РёРјРё (dz=0)
 
-	// безусловный поворот на +90 град вокруг оси Х (потому что сечения нормальны к базовой плоскости)
+	// Р±РµР·СѓСЃР»РѕРІРЅС‹Р№ РїРѕРІРѕСЂРѕС‚ РЅР° +90 РіСЂР°Рґ РІРѕРєСЂСѓРі РѕСЃРё РҐ (РїРѕС‚РѕРјСѓ С‡С‚Рѕ СЃРµС‡РµРЅРёСЏ РЅРѕСЂРјР°Р»СЊРЅС‹ Рє Р±Р°Р·РѕРІРѕР№ РїР»РѕСЃРєРѕСЃС‚Рё)
 	lp = Point3(lp.get<0>(), lp.get<2>(), -lp.get<1>());
 
-	// поворот относительно оси Y
+	// РїРѕРІРѕСЂРѕС‚ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕСЃРё Y
 	Point2 n0(0, -1);
 	Point2 n(getNormal().get<0>(), getNormal().get<1>());
 	double phi = angle(n0, n);
@@ -121,8 +126,14 @@ namespace
 		double imY = cv->Im->Y;
 		return complex_vector(cv->Re->X, cv->Re->Y, cv->Im->X, cv->Im->Y);
 	}
+	
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ РІРµРєС‚РѕСЂР° РёР· РЅР°С‡Р°Р»Р° РєРѕРѕСЂРґРёРЅР°С‚ РІ С‚РѕС‡РєСѓ p
+	double lenv(const Point3& p)
+	{
+		return distance(p, Point3(0, 0, 0));
+	}
 
-	// вычисляет расстояние от точки p до прямой p1-p2
+	// РІС‹С‡РёСЃР»СЏРµС‚ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РѕС‚ С‚РѕС‡РєРё p РґРѕ РїСЂСЏРјРѕР№ p1-p2
 	double pointToLine(Point3 p, Point3 p1, Point3 p2)
 	{
 		// R = (p2 - p)x(p2 -p1) / |s|
@@ -130,7 +141,14 @@ namespace
 		subtract_point(s, p1);	// p2 - p1
 		auto pm = p2;
 		subtract_point(pm, p);	// p2 - p
-		return length(cross_product(pm, s)) / length(s);
+		return lenv(cross_product(pm, s)) / lenv(s);
+	}
+
+	// Р’С‹С‡РёСЃР»СЏРµС‚ РєРѕСЃРёРЅСѓСЃ СѓРіР»Р° РјРµР¶РґСѓ РІРµРєС‚РѕСЂР°РјРё v1 Рё v2
+	double cosvv(const Point3& v1, const Point3& v2)
+	{
+		auto m = lenv(v1) * lenv(v2);
+		return m == 0 ? 0 : dot_product(v1, v2) / m;
 	}
 }
 
@@ -169,7 +187,7 @@ void OrthoPlaneSource::fillNode(Node& node) const
 	}
 }
 
-// источник в виде прямого тонкого провода
+// РёСЃС‚РѕС‡РЅРёРє РІ РІРёРґРµ РїСЂСЏРјРѕРіРѕ С‚РѕРЅРєРѕРіРѕ РїСЂРѕРІРѕРґР°
 Wire::Wire(QfProblemTypes problemType, field_t load, const Point3& p1, Point3& p2, const std::string& name) :
 	problemType_(problemType), load_(load), name_(name), 
 	start_(p1), end_(p2)
@@ -198,25 +216,37 @@ void Wire::prepare()
 
 }
 
-// вычисляем поле создаваемое прямым отрезком с током (или потенциалом) в заданной точке.
+// РІС‹С‡РёСЃР»СЏРµРј РїРѕР»Рµ СЃРѕР·РґР°РІР°РµРјРѕРµ РїСЂСЏРјС‹Рј РѕС‚СЂРµР·РєРѕРј СЃ С‚РѕРєРѕРј (РёР»Рё РїРѕС‚РµРЅС†РёР°Р»РѕРј) РІ Р·Р°РґР°РЅРЅРѕР№ С‚РѕС‡РєРµ.
 void Wire::fillNode(Node& node) const
 {
-	//										   | l2
-	// B = mu0*I*L/(4*pi*R) / sqrt(R^2 +L^2) |
-	//										   | l1
-	//	R - минимальное расстояние от провода то точки, в которой вычисляется поле
-	//	l - переменная интегрирования (координата вдоль провода)
+	//										   
+	// B = mu0*I/(4*pi*R)(cos(Alpha1) -cos(Alpha2)
+	//										   
+	//	R - РјРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РѕС‚ РїСЂРѕРІРѕРґР° p1-p2 РґРѕ С‚РѕС‡РєРё p, РІ РєРѕС‚РѕСЂРѕР№ РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РїРѕР»Рµ,
+	//  p1-p2 - РЅР°С‡Р°Р»СЊРЅР°СЏ Рё РєРѕРЅРµС‡РЅР°СЏ С‚РѕС‡РєРё РѕС‚СЂРµР·РєР° РїСЂРѕРІРѕРґР°,
+	//	Alpha1 = СѓРіРѕР» РјРµР¶РґСѓ РїСЂРѕРІРѕРґРѕРј Рё РѕС‚СЂРµР·РєРѕРј p1-p,
+	//  Alpha2 = 180-(СѓРіРѕР» РјРµР¶РґСѓ РїСЂРѕРІРѕРґРѕРј Рё РѕС‚СЂРµР·РєРѕРј p2-p).
 	
-	Point3 p = globalCoord(node);	// мировые координаты точки, в которой вычисляется поле
+	Point3 p = globalCoord(node);	// РјРёСЂРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё, РІ РєРѕС‚РѕСЂРѕР№ РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РїРѕР»Рµ
 	double R = pointToLine(p, end_, start_);
-	double L = distance(end_, start_);
-	auto B = mu0 * L * load_ / (4 * std::numbers::pi * R);
-	B *= 1 / std::sqrt(R * R) - 1 / std::sqrt(R * R + L * L);
-	node.u += 0;
+	auto p1_p2 = end_;
+	subtract_point(p1_p2, start_);	// РІРµРєС‚РѕСЂ РёР· p1 РІ p2 (РїСЂРѕРІРѕРґРЅРёРє СЃ С‚РѕРєРѕРј).
+	auto p1_p = p;
+	subtract_point(p1_p, start_);	// РІРµРєС‚РѕСЂ  РёР· p1 РІ p
+	auto p2_p = p;
+	subtract_point(p2_p, start_);	// РІРµРєС‚РѕСЂ  РёР· p2 РІ p
+	double absB = mu0 / (4 * std::numbers::pi * R) * (cosvv(p1_p2, p1_p) - cosvv(p1_p2, p2_p)); // Р·Р°РіРѕС‚РѕРІРєР° РґР»СЏ Р’ - РµРµ РЅР°РґРѕ СѓРјРЅРѕР¶РёС‚СЊ РЅР° С‚РѕРє
 
-	// вычислить направление вектора B
-	complex_vector dirB(1, 0, 1, 0);		// условно
-	//dirB.real *= B.real;
-	//dirB.imag *= B.imag;
-	//node.grad = node.grad + dirB;
+	// РІС‹С‡РёСЃР»РёС‚СЊ РЅР°РїСЂР°РІР»РµРЅРёРµ РІРµРєС‚РѕСЂР° B: РїРµСЂРїРµРЅРґРёРєСѓР»СЏСЂРЅРѕ РїР»РѕСЃРєРѕСЃС‚Рё, 
+	//	РїСЂРѕС…РѕРґСЏС‰РµР№ С‡РµСЂРµР· РїСЂРѕРІРѕРґ p1-p2 Рё РїСЂРѕР±РЅСѓСЋ С‚РѕС‡РєСѓ p РїРѕ РїСЂР°РІРёР»Сѓ РїСЂР°РІРѕР№ СЂСѓРєРё: p1_p2 x p2_p
+	auto Bdir = cross_product(p1_p2, p2_p);
+	divide_value(Bdir, lenv(Bdir));
+
+	// B(re, im) = dirB * absB * I(im, re) 
+	auto Bre = Bdir;
+	multiply_value(Bre, absB * load_.real());
+	auto Bim = Bdir;
+	multiply_value(Bim, absB * load_.imag());
+	add_point(node.Bre, Bre);
+	add_point(node.Bim, Bim);
 }

@@ -143,13 +143,13 @@ Data::Data(size_t argc, char* argv[]) :
 	}
 	else
 	{
-		// габариты расчетной области
+		// РіР°Р±Р°СЂРёС‚С‹ СЂР°СЃС‡РµС‚РЅРѕР№ РѕР±Р»Р°СЃС‚Рё
 		setBounds(Box2(-10, 30, -20, 20));
 		setZLevel(1.8);
 		setDivx(40);
 		setDivy(40);
 
-		// Отрезки прямых проводов
+		// РћС‚СЂРµР·РєРё РїСЂСЏРјС‹С… РїСЂРѕРІРѕРґРѕРІ
 		// Electric field
 		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(2100, 0),
 			1, 1, 1.8,

@@ -20,5 +20,5 @@ public:
 
 double smul(const Point2& a, const Point2& b);
 double vmul(const Point2& a, const Point2& b);
-double angle(const Point2& a, const Point2& b);	// угол между двумя векторами
+double angle(const Point2& a, const Point2& b);	// СѓРіРѕР» РјРµР¶РґСѓ РґРІСѓРјСЏ РІРµРєС‚РѕСЂР°РјРё
 

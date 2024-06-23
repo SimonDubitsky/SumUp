@@ -18,13 +18,10 @@ int main(size_t argc, char* argv[])
 	Summator summator(data.bounds(), data.divx(), data.divy());
 	summator.run(data.sources());
 	summator.save("grid.txt");
-	std::cout << std::endl << " All done!" << std::endl
-		<< " See results in 'grid.txt'";
+	std::cout << std::endl << " -----All done!" << std::endl;
 
 	std::cout << "\n\n Press any key to exit. ";
 	_kbhit();
 	char c = std::cin.get();
 }
-
-
 
