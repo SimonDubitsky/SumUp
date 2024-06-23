@@ -3,7 +3,6 @@
 
 #include <nlohmann\json.hpp>	// JSON parser/serializer
 #include <fstream>
-#include <numbers>
 
 using namespace nlohmann;
 
@@ -146,20 +145,35 @@ Data::Data(size_t argc, char* argv[]) :
 		// габариты расчетной области
 		setBounds(Box2(-10, 30, -20, 20));
 		setZLevel(1.8);
-		setDivx(40);
-		setDivy(40);
+		setDivx(160);
+		setDivy(160);
 
 		// Отрезки прямых проводов
 		// Electric field
-		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(2100, 0),
-			1, 1, 1.8,
-			1, 15, 1.8, "wireA"));
-		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(2100, 2 * std::numbers::pi / 3),
-			7, 1, 1.8,
-			7, 15, 1.8, "wireB"));
-		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(2100, 4 * std::numbers::pi / 3),
-			13, 1, 1.8,
-			13, 15, 1.8, "wireC"));
+		double I = 2000;	// ток 2000 А
+		double p120 = 2 * PI / 3;
+		double p240 = 4 * PI / 3;
+
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, 0),		15, 6, 0.5,		4, 6, 0.5,		"wireA-cable"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, 0),		4, 6, 0.5,		0.9, 6, 2.5,	"wireA-cable_R"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, 0),		0.9, 6, 2.5,	0.9, 6, 5,		"wireA-cable_vert"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, 0),		0.9, 6, 5,		0.9, 6, 10,		"wireA-joint"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, 0),		0.9, 6, 10,		5.3, 6, 21.8,	"wireA-slope"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, 0),		5.3, 6, 21.8,	15, 6, 21.8,	"wireA-overhead"));
+
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p120), 15, 0, 0.5, 4, 0, 0.5, "wireB-cable"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p120), 4, 0, 0.5, 0.9, 0, 2.5, "wireB-cable_R"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p120), 0.9, 0, 2.5, 0.9, 0, 5, "wireB-cable_vert"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p120), 0.9, 0, 5, 0.9, 0, 10, "wireB-joint"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p120), 0.9, 0, 10, 5.3, 0, 21.8, "wireB-slope"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p120), 5.3, 0, 21.8, 15, 0, 21.8, "wireB-overhead"));
+
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p240), 15, -6, 0.5, 4, -6, 0.5, "wireC-cable"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p240), 4, -6, 0.5, 0.9, -6, 2.5, "wireC-cable_R"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p240), 0.9, -6, 2.5, 0.9, -6, 5, "wireC-cable_vert"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p240), 0.9, -6, 5, 0.9, -6, 10, "wireC-joint"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p240), 0.9, -6, 10, 5.3, -6, 21.8, "wireC-slope"));
+		sources_.push_back(new Wire(qfTimeHarmonicMagnetics, field_t(I, p240), 5.3, -6, 21.8, 15, -6, 21.8, "wireC-overhead"));
 
 		// Electric field
 		//sources_.push_back(new OrthoPlaneSource("1_ES.pbm", Point3(60.3, 228, 0), Point3(0, -1, 0),

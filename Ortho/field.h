@@ -3,10 +3,10 @@
 
 #include "geom.h"
 #include <ccomplex>
+#include <numbers>
 
 using field_t = std::complex<double>;
-
-constexpr double PI = 3.1415926;
+constexpr double PI = std::numbers::pi;
 
 struct Vector2 : public Point2
 {

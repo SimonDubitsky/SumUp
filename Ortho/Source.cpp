@@ -234,8 +234,8 @@ void Wire::fillNode(Node& node) const
 	auto p1_p = p;
 	subtract_point(p1_p, start_);	// вектор  из p1 в p
 	auto p2_p = p;
-	subtract_point(p2_p, start_);	// вектор  из p2 в p
-	double absB = mu0 / (4 * std::numbers::pi * R) * (cosvv(p1_p2, p1_p) - cosvv(p1_p2, p2_p)); // заготовка для В - ее надо умножить на ток
+	subtract_point(p2_p, end_);	// вектор  из p2 в p
+	double absB = mu0 / (4 * PI * R) * (cosvv(p1_p2, p1_p) - cosvv(p1_p2, p2_p)); // заготовка для В - ее надо умножить на ток
 
 	// вычислить направление вектора B: перпендикулярно плоскости, 
 	//	проходящей через провод p1-p2 и пробную точку p по правилу правой руки: p1_p2 x p2_p

@@ -5,9 +5,8 @@
 
 #include <vector>
 #include <string>
-#include <numbers>
 
-const double mu0 = 4 * std::numbers::pi * 1e-7;
+const double mu0 = 4 * PI * 1e-7;
 const double eps0 = 8.85418782e-12;
 
 // represents a node in the global plane (the target of summation)
