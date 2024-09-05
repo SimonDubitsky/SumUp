@@ -15,12 +15,13 @@ BOOL prepare_qf(WindowPtr& ptrWin)
 
 	//const std::string RandD{ "E:\\R&D\\" };		// devDell
 	//const std::string RandD{ "E:\\R&D\\" };		// Dev10
-	const std::string RandD{ "D:\\R&D\\" };			// SimonW540
+	//const std::string RandD{ "D:\\R&D\\" };		// SimonW540
+	const std::string RandD{ "E:\\R&D\\" };			// Simon-NUC
 	const std::string problemPath = RandD +
 		//"Дмитрий Влад. Кузнецов\\2021-July_ИмпульсПроект\\_PART-2 (ПС-110 здание)\\Problems";
 		//"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
 		//"Дмитрий Влад.Кузнецов\\2024-апрель\\Problems";
-		"ImpulsProject\\2024-April\\Problems";
+		"ImpulsProject\\2024-April\\ОРУ-750\\Problems ";
 
 	QF()->DefaultFilePath = _bstr_t(problemPath.c_str());
 
