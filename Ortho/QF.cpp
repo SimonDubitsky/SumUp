@@ -21,7 +21,7 @@ BOOL prepare_qf(WindowPtr& ptrWin)
 		//"Дмитрий Влад. Кузнецов\\2021-July_ИмпульсПроект\\_PART-2 (ПС-110 здание)\\Problems";
 		//"Дмитрий Влад. Кузнецов\\2019-July-01_ИмпульсПроект\\ВЛ-750\\Problems";
 		//"Дмитрий Влад.Кузнецов\\2024-апрель\\Problems";
-		"ImpulsProject\\2024-April\\ОРУ-750\\Problems ";
+		"ImpulsProject\\2024-April\\ORU-750\\Problems";
 
 	QF()->DefaultFilePath = _bstr_t(problemPath.c_str());
 

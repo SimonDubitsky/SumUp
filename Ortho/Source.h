@@ -29,13 +29,12 @@ class Source
 {
 public:
 	Source() { }
-	Source(Point3 origin, Point3 normal) :
-		origin_(origin), normal_(normal)
-	{ }
+	Source(Point3 origin, Point3 normal);
 
 	virtual Point3 getOrigin() const;	// location of local CS in the global
 	virtual Point3 getNormal() const;	// location to the plane of local CS in the global
-	virtual Point3 globalCoord(const Point2& p) const;	// local -> global conversion
+	virtual Point3 getGlobal(const Point2& p) const;	// local -> global conversion
+	virtual Point2 getLocal(const Point3& p) const;		// local -> global conversion
 	virtual void fillNode(Node& node) const = 0; // calculate field in the given point
 
 	virtual double zLevel() const { return zLevel_; }
@@ -68,7 +67,8 @@ public:
 	OrthoPlaneSource(const std::string& problemName,
 		const Point3& origin, const Point3& normal, const Box2& box);
 
-	Point3 globalCoord(const Point2& p) const override;
+	Point3 getGlobal(const Point2& p) const override;
+	Point2 getLocal(const Point3& p) const override;
 	void prepare() override;
 	void release() override;
 	std::string name() const override;
@@ -99,7 +99,7 @@ public:
 		double x1, double y1, double z1,
 		double x2, double y2, double z2, const std::string& name = "");
 
-	Point3 globalCoord(const Point2& p) const override;
+	Point3 getGlobal(const Point2& p) const override;
 	void prepare() override;
 	std::string name() const override { return name_; }
 	void fillNode(Node& node) const override;

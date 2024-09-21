@@ -1,6 +1,29 @@
 #include "stdafx.h"
 #include "Source.h"
 #include <atlbase.h>
+#include <boost/geometry/strategies/strategy_transform.hpp>
+
+using namespace boost::geometry;
+using namespace boost::geometry::strategy::transform;
+
+namespace
+{
+	Point3 normalize(const Point3& n)
+	{
+		Point3 norm(n);
+		double x = n.get<0>();
+		double y = n.get<1>();
+		double z = n.get<2>();
+		auto len = std::sqrt(x*x + y*y + z*z);
+		multiply_value(norm, 1 / len);
+		return norm;
+	}
+}
+
+Source::Source(Point3 origin, Point3 normal) :
+	origin_(origin), normal_(normalize(normal))
+{ 
+}
 
 Point3 Source::getOrigin() const
 {
@@ -12,11 +35,20 @@ Point3 Source::getNormal() const
 	return normal_;
 }
 
-Point3 Source::globalCoord(const Point2& p) const
+// local -> global conversion
+Point3 Source::getGlobal(const Point2& uv) const
 {
-	Point3 lp(p.get<0>(), p.get<1>(), zLevel());
+	Point3 lp(uv.get<0>(), uv.get<1>(), zLevel());
 
 	return lp;
+}
+
+// local -> global conversion
+Point2 Source::getLocal(const Point3& p) const
+{
+	Point2 uv(p.get<0>(), p.get<1>());
+
+	return uv;
 }
 
 void Source::prepare()
@@ -33,7 +65,7 @@ std::string Source::name() const
 void FakeSource::fillNode(Node& node) const
 {
 	// just emulator
-	auto p = globalCoord(node);
+	auto p = getGlobal(node);
 	double x = p.get<0>();
 	double y = p.get<1>();
 	if (y == 0)
@@ -65,13 +97,13 @@ OrthoPlaneSource::OrthoPlaneSource(const std::string& problemName,
 	box_(box)
 { }
 
-Point3 OrthoPlaneSource::globalCoord(const Point2& p) const
+Point3 OrthoPlaneSource::getGlobal(const Point2& uv) const
 {
 	Point3 lp(0 , 0, 0);
 
 	// сдвиг
-	lp.set<0>(p.get<0>() - getOrigin().get<0>());
-	lp.set<1>(p.get<1>() - getOrigin().get<1>());
+	lp.set<0>(uv.get<0>() - getOrigin().get<0>());
+	lp.set<1>(uv.get<1>() - getOrigin().get<1>());
 	lp.set<2>(zLevel()); //	высоты считаем совпадающими (dz=0)
 
 	// безусловный поворот на +90 град вокруг оси Х (потому что сечения нормальны к базовой плоскости)
@@ -87,6 +119,31 @@ Point3 OrthoPlaneSource::globalCoord(const Point2& p) const
 	
 	return lp;
 }
+
+// local -> global conversion
+Point2 OrthoPlaneSource::getLocal(const Point3& p) const
+{
+	auto x = p.get<0>();
+	auto y = p.get<1>();
+	auto z = p.get<2>();
+
+	auto x0 = getOrigin().get<0>();
+	auto y0 = getOrigin().get<1>();
+	auto nx = getNormal().get<0>();
+	auto ny = getNormal().get<1>();
+
+	auto u = (x - x0) * nx + (y - y0) * ny;
+	auto v = -(x - x0) * ny + (y - y0) * nx;
+
+	// check
+	{
+		auto bx = u * nx - v * ny + x0;
+		auto by = u * ny + v * nx + y0;
+		int i = 5;
+	}
+	return Point2(u, v);
+}
+
 
 bool OrthoPlaneSource::isInsideBox(const Point2& p) const
 {
@@ -154,27 +211,29 @@ namespace
 
 void OrthoPlaneSource::fillNode(Node& node) const
 {
-	auto lp = globalCoord(node);
-	double x = lp.get<0>();
-	double y = lp.get<1>();
-	double z = lp.get<2>();
+	auto p = Point3(node.get<0>(), node.get<1>(), zLevel());
+	auto uv = getLocal(p);
+	double z = uv.get<0>();
+	double x = -uv.get<1>();
+	double y = zLevel();
+
 
 	if (isInsideBox(Point2(x, z)))
 	{
-		field_t u(0, 0);
+		field_t potential(0, 0);
 		complex_vector grad;
 		IResultPtr res = pbm_->Result;
 
 		if (pbm_->ProblemType == qfTimeHarmonicElectric)
 		{
 			FieldPointECPtr field = res->GetLocalValues(QF()->PointXY(x, y));
-			u = field_t(field->U->Re, field->U->Im);
+			potential = field_t(field->U->Re, field->U->Im);
 			grad = toComplexVector(field->E);
 		}
 		else if (pbm_->ProblemType == qfTimeHarmonicMagnetics)
 		{
 			FieldPointHEPtr field = res->GetLocalValues(QF()->PointXY(x, y));
-			u = field_t(field->MagnPotenial->Re, field->MagnPotenial->Im);
+			potential = field_t(field->MagnPotenial->Re, field->MagnPotenial->Im);
 			grad = toComplexVector(field->FluxDensity);
 		}
 		else
@@ -182,7 +241,7 @@ void OrthoPlaneSource::fillNode(Node& node) const
 			assert(!"wrong problem type");
 		}
 
-		node.u += u;
+		node.u += potential;
 		node.grad += grad;
 	}
 }
@@ -204,7 +263,7 @@ Wire::Wire(QfProblemTypes problemType, field_t load,
 
 }
 
-Point3 Wire::globalCoord(const Point2& p) const
+Point3 Wire::getGlobal(const Point2& p) const
 {
 	Point3 lp(p.get<0>(), p.get<1>(), zLevel());
 
@@ -227,7 +286,7 @@ void Wire::fillNode(Node& node) const
 	//	Alpha1 = угол между проводом и отрезком p1-p,
 	//  Alpha2 = 180-(угол между проводом и отрезком p2-p).
 	
-	Point3 p = globalCoord(node);	// мировые координаты точки, в которой вычисляется поле
+	Point3 p = getGlobal(node);	// мировые координаты точки, в которой вычисляется поле
 	double R = pointToLine(p, end_, start_);
 	auto p1_p2 = end_;
 	subtract_point(p1_p2, start_);	// вектор из p1 в p2 (проводник с током).

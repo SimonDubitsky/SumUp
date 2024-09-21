@@ -89,13 +89,14 @@ void Summator::save(const std::string& filename)
 			//	<< node.grad.imag().get<0>() << dlm << node.grad.imag().get<1>() << dlm
 			//	<< std::endl;
 
-			double uRMS = abs(node.u);
+			double uRMS = abs(node.u) / sqrt(2);
+
 			double reX = node.grad.real().x();
 			double reY = node.grad.real().y();
 			double imX = node.grad.imag().x();
 			double imY = node.grad.imag().y();
-
 			double gradRMS = sqrt(reX * reX + reY * reY + imX * imX + imY *imY) / sqrt(2);
+
 			double BreX = node.Bre.get<0>(), BreY = node.Bre.get<1>(), BreZ = node.Bre.get<2>();
 			double BimX = node.Bim.get<0>(), BimY = node.Bim.get<1>(), BimZ = node.Bim.get<2>();
 			double Brms = sqrt(BreX * BreX + BreY * BreY + BreZ * BreZ +
